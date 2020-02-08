@@ -1,4 +1,8 @@
-console.log("app linked");
+//TO Do:
+//fix html and js to reflect using a table
+
+//figure out formulas for moment to convert time + console log those
+//make sure all items are being added to the table data (use timesheet activity)
 
 //Initialize Firebase
 var firebaseConfig = {
@@ -60,6 +64,17 @@ $("#submitButton").on("click", function(event) {
     frequency: frequency,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
+  //logs everything to console
+  console.log(trainName);
+  console.log(destination);
+  console.log(frequency);
+  console.log(firstTrainTime);
+
+  //clears the text-boxes
+  $("#trainName-input").val("");
+  $("#destination-input").val("");
+  $("#1stTrainTime-input").val("");
+  $("#frequency-input").val("");
 });
 
 //======================================================================
@@ -91,4 +106,14 @@ database.ref().on("child_added", function(snapshot) {
     //show current variables (ie on page load there will be none)
     $("").text(trainName);
   }
+  // full list of items to the well
+  $("#userInputDisplay").append(
+    "<div class='well'><span id= 'trainName'> " +
+      sv.trainName +
+      " </span><span id='destination'> " +
+      sv.destination +
+      "</span></div>"
+  );
+  // " </span><span id='age'> " + childSnapshot.val().age +
+  // " </span><span id='comment'> " + childSnapshot.val().comment + " </span></div>");
 });

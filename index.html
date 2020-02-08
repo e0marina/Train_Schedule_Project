@@ -60,14 +60,19 @@
               Current Train Schedule
             </div>
             <div class="card-body">
-              <!-- Wells for displaying all users inputs -->
-              <div class="col-lg-12">
-                <div class="panel panel-default">
-                  <div class="panel-body">
-                    <div id="userInputDisplay"></div>
-                  </div>
-                </div>
-              </div>
+              <!-- Table for displaying all users inputs -->
+              <table class="table table-sm table-hover" id="train-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Train Name</th>
+                    <th scope="col">Destination</th>
+                    <th scope="col">Frequency (min)</th>
+                    <th scope="col">Next Arrival</th>
+                    <th scope="col">Minutes Away</th>
+                  </tr>
+                </thead>
+                <tbody></tbody>
+              </table>
             </div>
           </div>
         </div>
@@ -99,7 +104,7 @@
                     type="text"
                     class="form-control"
                     id="trainName-input"
-                    placeholder=""
+                    placeholder="Choo Choo Train"
                   />
                 </div>
                 <div class="form-group">
@@ -108,7 +113,7 @@
                     type="text"
                     class="form-control"
                     id="destination-input"
-                    placeholder=""
+                    placeholder="Transylvania"
                   />
                 </div>
                 <div class="form-group">
@@ -119,7 +124,7 @@
                     type="text"
                     class="form-control"
                     id="1stTrainTime-input"
-                    placeholder=""
+                    placeholder="20:10"
                   />
                 </div>
                 <div class="form-group">
@@ -128,7 +133,7 @@
                     type="text"
                     class="form-control"
                     id="frequency-input"
-                    placeholder=""
+                    placeholder="30"
                   />
                 </div>
                 <button id="submitButton" type="submit" class="btn btn-primary">
