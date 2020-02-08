@@ -16,38 +16,43 @@ firebase.initializeApp(firebaseConfig);
 //======================================================================
 var trainName = "";
 var destination = "";
-var frequency = 0;
-var nextArrival = 0; //time
-var minsAway = 0;
+var frequency = "";
+var nextArrival = ""; //time
+var minsAway = "";
+var firstTrainTime = "";
+var dateAdded = "";
 
 //======================================================================
 //FUNCTIONS
 //======================================================================
 //click listener for submit
 $("#submitButton").on("click", function(event) {
+  console.log("submitButton working");
+
   //prevent page from refresh
   event.preventDefault();
 
   //Get inputs
-  nameoftrain = $("#trainName-input")
+  trainName = $("#trainName-input")
     .val()
     .trim();
-  destinationoftrain = $("#destination-input")
+  destination = $("#destination-input")
     .val()
     .trim();
-  firsttraintime = $("#1stTrainTime-input")
+  firstTrainTime = $("#1stTrainTime-input")
     .val()
     .trim();
-  frequencyoftrain = $("#frequency-input")
+  frequency = $("#frequency-input")
     .val()
     .trim();
 
-  //change what is saved to firebase
-  database.ref().set({
-    nameoftrain: nameoftrain,
-    destinationoftrain: destinationoftrain,
-    firsttraintime: firsttraintime,
-    frequencyoftrain: frequencyoftrain
+  //change what is saved to firebase using push
+  database.ref().push({
+    trainName: trainName,
+    destination: destination,
+    firstTrainTime: firstTrainTime,
+    frequency: frequency
+    dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
 
@@ -57,4 +62,22 @@ $("#submitButton").on("click", function(event) {
 //tell database to listen for events
 database.ref().on("value", function(snapshot) {
   console.log(snapshot.val());
+  //if Firebase has anything stored, update our client-side variables
+  if (
+    snapshot.child("trainName").exists() &&
+    snapshot.child("destination").exists() &&
+    snapshot.child("frequency").exists() &&
+    snapshot.child("nextArrival").exists() &&
+    snapshot.child("minsAway").exists()
+  ) {
+    //Set the variables to stored values
+    trainName = snapshot.val().trainName;
+    destination = snapshot.val().destination;
+
+    // console.log(trainName);
+    // console.log(destination);
+    // console.log(frequency);
+    // console.log(nextArrival);
+    // console.log(minsAway);
+  }
 });
