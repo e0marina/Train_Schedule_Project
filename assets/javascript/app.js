@@ -14,7 +14,24 @@ firebase.initializeApp(firebaseConfig);
 //======================================================================
 //GLOBAL VARIABLES
 //======================================================================
+var trainName = "";
+var destination = "";
+var frequency = 0;
+var nextArrival = 0;//time 
+var minsAway = 0;
 
 //======================================================================
 //FUNCTIONS
 //======================================================================
+//click listener for submit 
+$("#submitButton").on("click", function...)
+//======================================================================
+//MAIN PROCESS + INITIAL CODE
+//======================================================================
+//tell database to listen for events 
+database.ref().on("value", function(snapshot){
+    console.log(snapshot.val());
+
+    
+});
+
