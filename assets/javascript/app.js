@@ -17,21 +17,44 @@ firebase.initializeApp(firebaseConfig);
 var trainName = "";
 var destination = "";
 var frequency = 0;
-var nextArrival = 0;//time 
+var nextArrival = 0; //time
 var minsAway = 0;
 
 //======================================================================
 //FUNCTIONS
 //======================================================================
-//click listener for submit 
-$("#submitButton").on("click", function...)
+//click listener for submit
+$("#submitButton").on("click", function(event) {
+  //prevent page from refresh
+  event.preventDefault();
+
+  //Get inputs
+  nameoftrain = $("#trainName-input")
+    .val()
+    .trim();
+  destinationoftrain = $("#destination-input")
+    .val()
+    .trim();
+  firsttraintime = $("#1stTrainTime-input")
+    .val()
+    .trim();
+  frequencyoftrain = $("#frequency-input")
+    .val()
+    .trim();
+
+  //change what is saved to firebase
+  database.ref().set({
+    nameoftrain: nameoftrain,
+    destinationoftrain: destinationoftrain,
+    firsttraintime: firsttraintime,
+    frequencyoftrain: frequencyoftrain
+  });
+});
+
 //======================================================================
 //MAIN PROCESS + INITIAL CODE
 //======================================================================
-//tell database to listen for events 
-database.ref().on("value", function(snapshot){
-    console.log(snapshot.val());
-
-    
+//tell database to listen for events
+database.ref().on("value", function(snapshot) {
+  console.log(snapshot.val());
 });
-
