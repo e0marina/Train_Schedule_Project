@@ -80,40 +80,31 @@ $("#submitButton").on("click", function(event) {
 //======================================================================
 //MAIN PROCESS + INITIAL CODE
 //======================================================================
-//Firebase watcher + initial loader
-database.ref().on("child_added", function(snapshot) {
-  console.log(snapshot.val());
-  //storing the snapshot.val() in a variable for convenience
-  var sv = snapshot.val();
+//Firebase watcher + initial loader/ adding train info to database and a row to html when user adds entry
+database.ref().on("child_added", function(childSnapshot) {
+  console.log(childSnapshot.val());
+
+  //store everything into a variable
+  var trainName = childSnapshot.val().trainName;
+  var destination = childSnapshot.val().destination;
+  var firstTrainTime = childSnapshot.val().firstTrainTime;
+  var frequency = childSnapshot.val().frequency;
+  var dateAdded = childSnapshot.val().dateAdded;
 
   // console.logging the last user's data
-  console.log(sv.trainName);
-  console.log(sv.destination);
-  console.log(sv.firstTrainTime);
-  console.log(sv.frequency);
+  console.log(trainName);
+  console.log(destination);
+  console.log(firstTrainTime);
+  console.log(frequency);
+  console.log(dateAdded);
 
-  //if Firebase has anything stored, update our client-side variables
-  if (
-    snapshot.child("trainName").exists() &&
-    snapshot.child("destination").exists() &&
-    snapshot.child("frequency").exists() &&
-    snapshot.child("nextArrival").exists() &&
-    snapshot.child("minsAway").exists()
-  ) {
-    //change the html to reflect updated local values (most recent info from firebase)
-    $("").text(sv.trainName);
-  } else {
-    //show current variables (ie on page load there will be none)
-    $("").text(trainName);
-  }
-  // full list of items to the well
-  $("#userInputDisplay").append(
-    "<div class='well'><span id= 'trainName'> " +
-      sv.trainName +
-      " </span><span id='destination'> " +
-      sv.destination +
-      "</span></div>"
+  //create new row
+  var newRow = $("<tr>").append(
+    $("<td>").text(trainName),
+    $("<td>").text(destination),
+    $("<td>").text(firstTrainTime),
+    $("<td>").text(frequency)
   );
-  // " </span><span id='age'> " + childSnapshot.val().age +
-  // " </span><span id='comment'> " + childSnapshot.val().comment + " </span></div>");
+  //Append the new row to the table
+  $("#train-table > tbody").append(newRow);
 });
