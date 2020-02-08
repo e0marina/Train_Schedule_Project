@@ -1,3 +1,5 @@
+console.log("app linked");
+
 //Initialize Firebase
 var firebaseConfig = {
   apiKey: "AIzaSyCNYhZY7DWHF7pxQQJlAuEKOfOCbv55EuU",
@@ -8,19 +10,23 @@ var firebaseConfig = {
   messagingSenderId: "127915851584",
   appId: "1:127915851584:web:32358ea6802aa9446104a5"
 };
-
+// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
+
+// Create a variable to reference the database.
+var database = firebase.database();
 
 //======================================================================
 //GLOBAL VARIABLES
 //======================================================================
+
+//initial values
 var trainName = "";
 var destination = "";
 var frequency = "";
 var nextArrival = ""; //time
 var minsAway = "";
 var firstTrainTime = "";
-var dateAdded = "";
 
 //======================================================================
 //FUNCTIONS
@@ -51,7 +57,7 @@ $("#submitButton").on("click", function(event) {
     trainName: trainName,
     destination: destination,
     firstTrainTime: firstTrainTime,
-    frequency: frequency
+    frequency: frequency,
     dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
 });
@@ -59,9 +65,18 @@ $("#submitButton").on("click", function(event) {
 //======================================================================
 //MAIN PROCESS + INITIAL CODE
 //======================================================================
-//tell database to listen for events
-database.ref().on("value", function(snapshot) {
+//Firebase watcher + initial loader
+database.ref().on("child_added", function(snapshot) {
   console.log(snapshot.val());
+  //storing the snapshot.val() in a variable for convenience
+  var sv = snapshot.val();
+
+  // console.logging the last user's data
+  console.log(sv.trainName);
+  console.log(sv.destination);
+  console.log(sv.firstTrainTime);
+  console.log(sv.frequency);
+
   //if Firebase has anything stored, update our client-side variables
   if (
     snapshot.child("trainName").exists() &&
@@ -70,14 +85,10 @@ database.ref().on("value", function(snapshot) {
     snapshot.child("nextArrival").exists() &&
     snapshot.child("minsAway").exists()
   ) {
-    //Set the variables to stored values
-    trainName = snapshot.val().trainName;
-    destination = snapshot.val().destination;
-
-    // console.log(trainName);
-    // console.log(destination);
-    // console.log(frequency);
-    // console.log(nextArrival);
-    // console.log(minsAway);
+    //change the html to reflect updated local values (most recent info from firebase)
+    $("").text(sv.trainName);
+  } else {
+    //show current variables (ie on page load there will be none)
+    $("").text(trainName);
   }
 });
