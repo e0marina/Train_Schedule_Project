@@ -1,8 +1,5 @@
-//TO Do:
-//fix html and js to reflect using a table
-
-//figure out formulas for moment to convert time + console log those
-//make sure all items are being added to the table data (use timesheet activity)
+//Questions:
+//do I need to sort by DateAdded to account for multi users?
 
 //Initialize Firebase
 var firebaseConfig = {
@@ -28,7 +25,7 @@ var database = firebase.database();
 var trainName = "";
 var destination = "";
 var frequency = "";
-var nextArrival = ""; //time
+var nextArrival = "";
 var minsAway = "";
 var firstTrainTime = "";
 
@@ -61,8 +58,8 @@ $("#submitButton").on("click", function(event) {
     trainName: trainName,
     destination: destination,
     firstTrainTime: firstTrainTime,
-    frequency: frequency,
-    dateAdded: firebase.database.ServerValue.TIMESTAMP
+    frequency: frequency
+    // dateAdded: firebase.database.ServerValue.TIMESTAMP
   });
   //logs everything to console
   console.log(trainName);
@@ -89,21 +86,54 @@ database.ref().on("child_added", function(childSnapshot) {
   var destination = childSnapshot.val().destination;
   var firstTrainTime = childSnapshot.val().firstTrainTime;
   var frequency = childSnapshot.val().frequency;
-  var dateAdded = childSnapshot.val().dateAdded;
+  // var dateAdded = childSnapshot.val().dateAdded;
 
   // console.logging the last user's data
   console.log(trainName);
   console.log(destination);
   console.log(firstTrainTime);
   console.log(frequency);
-  console.log(dateAdded);
+  // console.log(dateAdded);
+
+  //Do some math to figure out Next arrival from frequency and first train time inputs
+
+  //First Train Time (push back 1 year to make sure it comes before current time)
+  var firstTrainTimeConverted = moment(firstTrainTime, "HH:mm").subtract(
+    1,
+    "years"
+  );
+
+  console.log(firstTrainTimeConverted);
+
+  //Current Time
+  var currentTime = moment();
+  console.log("current time:" + moment(currentTime).format("hh:mm"));
+
+  //Difference between the times
+  var diffTime = moment().diff(moment(firstTrainTimeConverted), "minutes");
+  console.log("difference in time: " + diffTime);
+
+  //Time apart (remainder)
+  var tRemainder = diffTime % frequency;
+  console.log(tRemainder);
+
+  //Minutes Until Train
+  var minsAway = frequency - tRemainder;
+  console.log("minutes until train:" + minsAway);
+
+  //Next Train
+
+  var nextArrivalRaw = moment().add(minsAway, "minutes");
+  var nextArrival = moment(nextArrivalRaw).format("hh:mm");
+  console.log("arrival time:" + moment(nextArrival).format("hh:mm"));
 
   //create new row
   var newRow = $("<tr>").append(
     $("<td>").text(trainName),
     $("<td>").text(destination),
-    $("<td>").text(firstTrainTime),
-    $("<td>").text(frequency)
+    $("<td>").text(frequency),
+    $("<td>").text(nextArrival),
+    $("<td>").text(minsAway)
   );
   //Append the new row to the table
   $("#train-table > tbody").append(newRow);
