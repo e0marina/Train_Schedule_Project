@@ -124,7 +124,7 @@ database.ref().on("child_added", function(childSnapshot) {
   //Next Train
 
   var nextArrivalRaw = moment().add(minsAway, "minutes");
-  var nextArrival = moment(nextArrivalRaw).format("hh:mm");
+  var nextArrival = moment(nextArrivalRaw).format("hh:mm a");
   console.log("arrival time:" + moment(nextArrival).format("hh:mm"));
 
   //create new row
